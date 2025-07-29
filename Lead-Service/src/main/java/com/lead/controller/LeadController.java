@@ -1,18 +1,18 @@
 package com.lead.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lead.client.UserSerivceClinet;
 import com.lead.dto.Company;
 import com.lead.dto.LeadWithColumnsDTO;
@@ -43,8 +42,6 @@ import com.lead.repository.LeadInfoRepository;
 import com.lead.repository.LeadRepository;
 import com.lead.repository.LeadStatusRepository;
 
-import jakarta.websocket.server.PathParam;
-
 @RestController
 @RequestMapping("/lead")
 public class LeadController {
@@ -52,8 +49,7 @@ public class LeadController {
 	@Autowired
 	private UserSerivceClinet userSerivceClinet;
 
-	@Autowired
-	private LeadInfoRepository leadInfoRepository;
+	
 
 	@Autowired
 	private LeadRepository leadRepository;
@@ -110,7 +106,7 @@ public class LeadController {
 	}
 
 	@GetMapping("/getAllLeads/{page}/{size}")
-	public ResponseEntity<?> getAllLeads(@PathVariable int page ,@PathVariable int size) {
+	public ResponseEntity<?> getAllLeads(@PathVariable int page ,@PathVariable int size,@RequestParam(defaultValue = "") String name) {
 
 	    try {
 	        // 1. Fetch column metadata for company
@@ -122,7 +118,27 @@ public class LeadController {
 
 	        // 2. Fetch paginated leads for company
 	        Pageable pageable = PageRequest.of(page, size);
-	        Page<Lead> leadPage = leadRepository.findByCompanyIdOrderByIdDesc(company.getCompanyId(), pageable);
+	        Page<Lead> leadPage =null;
+	        if(name.isEmpty()) {
+	         leadPage = leadRepository.findByCompanyIdOrderByIdDesc(company.getCompanyId(), pageable);
+	        }else {
+				// Build dynamic OR criteria for all columns
+				List<Criteria> fieldCriteria = new ArrayList<>();
+				for (LeadColumn.ColumnDefinition colDef : sortedColumns) {
+					fieldCriteria.add(Criteria.where("fields." + colDef.getName()).regex(name, "i"));
+				}
+
+				Criteria criteria = new Criteria().andOperator(Criteria.where("companyId").is(company.getCompanyId()),
+						new Criteria().orOperator(fieldCriteria.toArray(new Criteria[0])));
+
+				Query query = new Query(criteria).with(pageable);
+				List<Lead> leads = mongoTemplate.find(query, Lead.class);
+
+				// Get total count for pagination
+				long total = mongoTemplate.count(new Query(criteria), Lead.class);
+
+				leadPage = new PageImpl<>(leads, pageable, total);
+	        }
 
 	        // 3. Prepare response
 	        Map<String, Object> response = new HashMap<>();
