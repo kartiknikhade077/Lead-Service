@@ -63,7 +63,6 @@ public class LeadController {
 	private LeadStatusRepository leadStatusRepository;
 
 	Company company;
-	User user;
 
 	@ModelAttribute
 	public void companyDetails() {

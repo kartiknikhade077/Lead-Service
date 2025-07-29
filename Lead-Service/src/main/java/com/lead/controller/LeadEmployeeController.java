@@ -61,8 +61,7 @@ public class LeadEmployeeController {
 	public Employee employeeInfo() {
 
 		employee = userSerivceClinet.getEmployeeInfo();
-		System.err.println("Inside Eployee Info	");
-		System.err.println(employee.getEmployeeId());
+		
 		return employee;
 
 	}
