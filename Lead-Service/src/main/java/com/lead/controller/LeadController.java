@@ -38,7 +38,6 @@ import com.lead.entity.Lead;
 import com.lead.entity.LeadColumn;
 import com.lead.entity.LeadStatus;
 import com.lead.repository.LeadColumnRepository;
-import com.lead.repository.LeadInfoRepository;
 import com.lead.repository.LeadRepository;
 import com.lead.repository.LeadStatusRepository;
 
