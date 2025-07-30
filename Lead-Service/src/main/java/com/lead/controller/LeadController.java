@@ -372,7 +372,21 @@ public class LeadController {
 	}
 	
 	
-	
+	@PutMapping("/updateLeadStatus/{leadId}/{leadStatus}")
+	public ResponseEntity<?> updateLeadStatus(@PathVariable String leadId, @PathVariable String leadStatus) {
+
+		try {
+
+			Lead lead = leadRepository.findByIdAndCompanyId(leadId, company.getCompanyId());
+			lead.setStatus(leadStatus);
+			leadRepository.save(lead);
+			return ResponseEntity.ok("Lead Status Updated");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error  " + e.getMessage());
+		}
+	}
 	
 
 

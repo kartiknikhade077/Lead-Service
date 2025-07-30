@@ -15,5 +15,7 @@ public interface LeadRepository extends MongoRepository<Lead, String> {
 	
 	@Query("{ 'companyId': ?0, 'fields': { $regex: ?1, $options: 'i' } }")
 	Page<Lead> searchByAnyField(long companyId, String keyword, Pageable pageable);
+	
+	Lead findByIdAndCompanyId(String id,int companyId);
 
 }
