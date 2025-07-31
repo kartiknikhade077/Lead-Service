@@ -218,12 +218,12 @@ public class LeadController {
 	
 	
 	
-
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/deleteLead/{id}")
 	public String deleteLead(@PathVariable String id) {
 		leadRepository.deleteById(id);
-		return "Lead deleted: " + id;
+		return "Lead deleted succefully ";
 	}
+
 
 	@PostMapping("/createColumn")
 	public LeadColumn createColumn(@RequestBody LeadColumn leadColumn) {
