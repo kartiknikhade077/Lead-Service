@@ -10,7 +10,7 @@ public class LeadWithColumnsDTO {
 	private Map<String, Object> lead;
 	private String status;
 	private String source;
-	private long employeeId;
+	private String employeeId;
 	private String assignTo;
 
 	public List<LeadColumn.ColumnDefinition> getColumns() {
@@ -45,11 +45,11 @@ public class LeadWithColumnsDTO {
 		this.source = source;
 	}
 
-	public long getEmployeeId() {
+	public String getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmployeeId(long employeeId) {
+	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
 	}
 

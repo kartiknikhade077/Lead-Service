@@ -9,13 +9,13 @@ import com.lead.entity.Lead;
 
 public interface LeadRepository extends MongoRepository<Lead, String> {
 
-	Page<Lead> findByCompanyIdOrderByIdDesc(long companyId,Pageable pageable);
+	Page<Lead> findByCompanyIdOrderByIdDesc(String companyId,Pageable pageable);
 	
-	Page<Lead> findByEmployeeIdOrderByIdDesc(long employeeId,Pageable pageable);
+	Page<Lead> findByEmployeeIdOrderByIdDesc(String employeeId,Pageable pageable);
 	
 	@Query("{ 'companyId': ?0, 'fields': { $regex: ?1, $options: 'i' } }")
 	Page<Lead> searchByAnyField(long companyId, String keyword, Pageable pageable);
 	
-	Lead findByIdAndCompanyId(String id,int companyId);
+	Lead findByIdAndCompanyId(String id,String companyId);
 
 }

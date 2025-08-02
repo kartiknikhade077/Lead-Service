@@ -8,11 +8,11 @@ public class LeadStatus {
 
 	@Id
 	private String id;
-	private int companyId;
+	private String companyId;
 	private String leadStatus;
     private int sequence;
     
-	public LeadStatus(String id, int companyId, String leadStatus, int sequence) {
+	public LeadStatus(String id, String companyId, String leadStatus, int sequence) {
 		super();
 		this.id = id;
 		this.companyId = companyId;
@@ -31,10 +31,10 @@ public class LeadStatus {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public int getCompanyId() {
+	public String getCompanyId() {
 		return companyId;
 	}
-	public void setCompanyId(int companyId) {
+	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
 	}
 	public String getLeadStatus() {

@@ -6,5 +6,5 @@ import com.lead.entity.LeadColumn;
 
 public interface LeadColumnRepository extends MongoRepository<LeadColumn, String> {
  
-	LeadColumn findByCompanyId(int companyId);
+	LeadColumn findByCompanyId(String companyId);
 }

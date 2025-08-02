@@ -80,8 +80,8 @@ public class LeadEmployeeController {
 		
 		Lead lead = new Lead();
 		lead.setFields(dto.getLead());
-		lead.setCompanyId(Long.valueOf(employee.getCompanyId()));
-		lead.setEmployeeId(Long.valueOf(employee.getEmployeeId()));
+		lead.setCompanyId(employee.getCompanyId());
+		lead.setEmployeeId(employee.getEmployeeId());
 		lead.setCreatedDate(LocalDateTime.now());
 		lead.setUpdatedDate(LocalDateTime.now());
 		lead.setStatus("New Lead");

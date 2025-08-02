@@ -4,9 +4,9 @@ package com.lead.dto;
 
 public class Employee {
 	
-	private int employeeId;
+	private String employeeId;
 	private int userId;
-	private int companyId;
+	private String companyId;
 	private String Name;
 	private String email;
 	private String password;
@@ -23,7 +23,7 @@ public class Employee {
 	private boolean leadAccess;
 	private boolean templateAccess;
 	private boolean emailAccess;
-	public Employee(int employeeId, int userId, int companyId, String name, String email, String password, String phone,
+	public Employee(String employeeId, int userId, String companyId, String name, String email, String password, String phone,
 			String description, String department, String gender, long departmentId, long roleId, String roleName,
 			boolean leadAccess, boolean templateAccess, boolean emailAccess) {
 		super();
@@ -48,10 +48,10 @@ public class Employee {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public int getEmployeeId() {
+	public String getEmployeeId() {
 		return employeeId;
 	}
-	public void setEmployeeId(int employeeId) {
+	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
 	}
 	public int getUserId() {
@@ -60,10 +60,10 @@ public class Employee {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	public int getCompanyId() {
+	public String getCompanyId() {
 		return companyId;
 	}
-	public void setCompanyId(int companyId) {
+	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
 	}
 	public String getName() {

@@ -10,6 +10,6 @@ import com.lead.entity.LeadStatus;
 @Repository
 public interface LeadStatusRepository extends MongoRepository<LeadStatus, String>{
 	
-	List<LeadStatus> findByCompanyId(int companyId);
+	List<LeadStatus> findByCompanyId(String companyId);
 
 }

@@ -1,7 +1,6 @@
 package com.lead.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
@@ -11,8 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Lead {
 	@Id
 	private String id;
-	private Long companyId;
-	private Long employeeId;
+	private String companyId;
+	private String employeeId;
 	private String assignTo;
 	private String status;
 	private String source;
@@ -35,7 +34,7 @@ public class Lead {
 
 	
 
-	public Lead(String id, Long companyId, Long employeeId, String assignTo, String status, String source,
+	public Lead(String id, String companyId, String employeeId, String assignTo, String status, String source,
 			LocalDateTime createdDate, LocalDateTime updatedDate, Map<String, Object> fields) {
 		super();
 		this.id = id;
@@ -70,19 +69,19 @@ public class Lead {
 		this.fields = fields;
 	}
 
-	public Long getCompanyId() {
+	public String getCompanyId() {
 		return companyId;
 	}
 
-	public void setCompanyId(Long companyId) {
+	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
 	}
 
-	public Long getEmployeeId() {
+	public String getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmployeeId(Long employeeId) {
+	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
 	}
 

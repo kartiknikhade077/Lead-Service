@@ -10,7 +10,7 @@ public class LeadColumn {
 
     @Id
     private String id;
-    private long companyId;
+    private String companyId;
     private List<ColumnDefinition> columns;
 
     public static class ColumnDefinition {
@@ -31,10 +31,10 @@ public class LeadColumn {
 
     public List<ColumnDefinition> getColumns() { return columns; }
     public void setColumns(List<ColumnDefinition> columns) { this.columns = columns; }
-	public long getCompanyId() {
+	public String getCompanyId() {
 		return companyId;
 	}
-	public void setCompanyId(long companyId) {
+	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
 	}
     

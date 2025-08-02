@@ -90,7 +90,7 @@ public class LeadController {
 		// 2. Save the lead
 		Lead lead = new Lead();
 		lead.setFields(dto.getLead());
-		lead.setCompanyId(Long.valueOf(company.getCompanyId()));
+		lead.setCompanyId(company.getCompanyId());
 		lead.setCreatedDate(LocalDateTime.now());
 		lead.setUpdatedDate(LocalDateTime.now());
 		lead.setStatus(dto.getStatus());
