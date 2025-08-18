@@ -72,7 +72,9 @@ public class LeadController {
 	}
 
 	@PostMapping("/createLead")
-	public LeadWithColumnsDTO createLead(@RequestBody LeadWithColumnsDTO dto) {
+	public ResponseEntity<?> createLead(@RequestBody LeadWithColumnsDTO dto) {
+		
+		try {
 		// 1. Save or update LeadColumn sequence
 		LeadColumn leadColumn = leadColumnRepository.findByCompanyId(company.getCompanyId());
 
@@ -99,9 +101,18 @@ public class LeadController {
 		lead.setEmployeeId(dto.getEmployeeId());
 		leadRepository.save(lead);
 
-		// 3. Return updated columns and saved lead
-		return dto;
+
+		 return ResponseEntity.ok(dto);
+		
+		}catch(Exception e) {
+			
+			 e.printStackTrace();
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+		                .body("Error " + e.getMessage());
+		}
 	}
+	
+	
 
 	@GetMapping("/getAllLeads/{page}/{size}")
 	public ResponseEntity<?> getAllLeads(@PathVariable int page ,@PathVariable int size,@RequestParam(defaultValue = "") String name) {
