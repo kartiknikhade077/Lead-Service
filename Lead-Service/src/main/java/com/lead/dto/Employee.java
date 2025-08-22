@@ -7,32 +7,23 @@ public class Employee {
 	private String employeeId;
 	private int userId;
 	private String companyId;
-	private String Name;
+	private String name;
 	private String email;
-	private String password;
 	private String phone;
 	private String description;
 	private String department;
 	private String gender;
-	private long departmentId;
-	private long roleId;
+	private String departmentId;
+	private String roleId;
 	private String roleName;
-	
-	//access module
-	
-	private boolean leadAccess;
-	private boolean templateAccess;
-	private boolean emailAccess;
-	public Employee(String employeeId, int userId, String companyId, String name, String email, String password, String phone,
-			String description, String department, String gender, long departmentId, long roleId, String roleName,
-			boolean leadAccess, boolean templateAccess, boolean emailAccess) {
+	public Employee(String employeeId, int userId, String companyId, String name, String email, String phone,
+			String description, String department, String gender, String departmentId, String roleId, String roleName) {
 		super();
 		this.employeeId = employeeId;
 		this.userId = userId;
 		this.companyId = companyId;
-		Name = name;
+		this.name = name;
 		this.email = email;
-		this.password = password;
 		this.phone = phone;
 		this.description = description;
 		this.department = department;
@@ -40,9 +31,6 @@ public class Employee {
 		this.departmentId = departmentId;
 		this.roleId = roleId;
 		this.roleName = roleName;
-		this.leadAccess = leadAccess;
-		this.templateAccess = templateAccess;
-		this.emailAccess = emailAccess;
 	}
 	public Employee() {
 		super();
@@ -67,22 +55,16 @@ public class Employee {
 		this.companyId = companyId;
 	}
 	public String getName() {
-		return Name;
+		return name;
 	}
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
 	public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
 	}
 	public String getPhone() {
 		return phone;
@@ -108,16 +90,16 @@ public class Employee {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-	public long getDepartmentId() {
+	public String getDepartmentId() {
 		return departmentId;
 	}
-	public void setDepartmentId(long departmentId) {
+	public void setDepartmentId(String departmentId) {
 		this.departmentId = departmentId;
 	}
-	public long getRoleId() {
+	public String getRoleId() {
 		return roleId;
 	}
-	public void setRoleId(long roleId) {
+	public void setRoleId(String roleId) {
 		this.roleId = roleId;
 	}
 	public String getRoleName() {
@@ -126,25 +108,8 @@ public class Employee {
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
-	public boolean isLeadAccess() {
-		return leadAccess;
-	}
-	public void setLeadAccess(boolean leadAccess) {
-		this.leadAccess = leadAccess;
-	}
-	public boolean isTemplateAccess() {
-		return templateAccess;
-	}
-	public void setTemplateAccess(boolean templateAccess) {
-		this.templateAccess = templateAccess;
-	}
-	public boolean isEmailAccess() {
-		return emailAccess;
-	}
-	public void setEmailAccess(boolean emailAccess) {
-		this.emailAccess = emailAccess;
-	}
-
+	
+	
 	
 	
 	

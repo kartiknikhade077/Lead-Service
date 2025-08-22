@@ -32,7 +32,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lead.client.UserSerivceClinet;
 import com.lead.dto.Company;
+import com.lead.dto.Employee;
 import com.lead.dto.LeadWithColumnsDTO;
+import com.lead.dto.ModuleAccess;
 import com.lead.dto.User;
 import com.lead.entity.Lead;
 import com.lead.entity.LeadColumn;
@@ -63,11 +65,20 @@ public class LeadController {
 	private LeadStatusRepository leadStatusRepository;
 
 	Company company;
+	User user;
+	Employee employee;
+	ModuleAccess moduleAccess;
 
 	@ModelAttribute
-	public void companyDetails() {
+	public void getUserInfo() {
 
-		company = userSerivceClinet.getCompanyInfo();
+		user = userSerivceClinet.getUserInfo();
+		moduleAccess =userSerivceClinet.getModuleAccessInfo();
+		if(user.getRole().equalsIgnoreCase("ROLE_COMPANY")) {
+			company = userSerivceClinet.getCompanyInfo();
+		}else {
+			employee=userSerivceClinet.getEmployeeInfo();
+		}
 
 	}
 
@@ -76,7 +87,16 @@ public class LeadController {
 		
 		try {
 		// 1. Save or update LeadColumn sequence
-		LeadColumn leadColumn = leadColumnRepository.findByCompanyId(company.getCompanyId());
+			
+			String companyId;
+			if (user.getRole().equalsIgnoreCase("ROLE_COMPANY")) {
+				companyId=company.getCompanyId();
+			} else {
+				companyId=employee.getCompanyId();
+			}
+
+			
+		LeadColumn leadColumn = leadColumnRepository.findByCompanyId(companyId);
 
 		if (leadColumn == null) {
 			leadColumn = new LeadColumn();
@@ -86,19 +106,25 @@ public class LeadController {
 			leadColumn.setColumns(dto.getColumns());
 		}
 		
-		leadColumn.setCompanyId(company.getCompanyId());
+		
 		leadColumnRepository.save(leadColumn);
 
 		// 2. Save the lead
 		Lead lead = new Lead();
 		lead.setFields(dto.getLead());
-		lead.setCompanyId(company.getCompanyId());
+		if (user.getRole().equalsIgnoreCase("ROLE_COMPANY")) {
+			lead.setCompanyId(company.getCompanyId());
+		} else {
+			lead.setEmployeeId(employee.getEmployeeId());
+			lead.setCompanyId(employee.getCompanyId());
+		}
+
 		lead.setCreatedDate(LocalDateTime.now());
 		lead.setUpdatedDate(LocalDateTime.now());
 		lead.setStatus(dto.getStatus());
 		lead.setSource(dto.getSource());
 		lead.setAssignTo(dto.getAssignTo());
-		lead.setEmployeeId(dto.getEmployeeId());
+		
 		leadRepository.save(lead);
 
 
@@ -119,7 +145,14 @@ public class LeadController {
 
 	    try {
 	        // 1. Fetch column metadata for company
-	        LeadColumn leadColumn = leadColumnRepository.findByCompanyId(company.getCompanyId());
+	    	String companyId;
+			if (user.getRole().equalsIgnoreCase("ROLE_COMPANY")) {
+				companyId=company.getCompanyId();
+			} else {
+				companyId=employee.getCompanyId();
+			}
+
+	        LeadColumn leadColumn = leadColumnRepository.findByCompanyId(companyId);
 	        List<LeadColumn.ColumnDefinition> sortedColumns = leadColumn.getColumns()
 	                .stream()
 	                .sorted(Comparator.comparingInt(LeadColumn.ColumnDefinition::getSequence))
@@ -129,16 +162,34 @@ public class LeadController {
 	        Pageable pageable = PageRequest.of(page, size);
 	        Page<Lead> leadPage =null;
 	        if(name.isEmpty()) {
+	        	if(user.getRole().equalsIgnoreCase("ROLE_COMPANY")) {	
+	        	
 	         leadPage = leadRepository.findByCompanyIdOrderByIdDesc(company.getCompanyId(), pageable);
+	        	}else if(moduleAccess.isLeadViewAll()){
+	        		leadPage = leadRepository.findByCompanyIdOrderByIdDesc(employee.getCompanyId(), pageable);	
+	        	}else {
+	        		 leadPage = leadRepository.findByEmployeeIdOrderByIdDesc(employee.getEmployeeId(), pageable);
+	        	}
 	        }else {
 				// Build dynamic OR criteria for all columns
 				List<Criteria> fieldCriteria = new ArrayList<>();
 				for (LeadColumn.ColumnDefinition colDef : sortedColumns) {
 					fieldCriteria.add(Criteria.where("fields." + colDef.getName()).regex(name, "i"));
 				}
-
-				Criteria criteria = new Criteria().andOperator(Criteria.where("companyId").is(company.getCompanyId()),
+				
+				Criteria criteria;
+				if(user.getRole().equalsIgnoreCase("ROLE_COMPANY")) {
+				criteria = new Criteria().andOperator(Criteria.where("companyId").is(companyId),
 						new Criteria().orOperator(fieldCriteria.toArray(new Criteria[0])));
+				}else if(moduleAccess.isLeadViewAll()) {
+					
+					criteria = new Criteria().andOperator(Criteria.where("companyId").is(companyId),
+							new Criteria().orOperator(fieldCriteria.toArray(new Criteria[0])));
+				}else {
+					
+					criteria = new Criteria().andOperator(Criteria.where("employeeId").is(employee.getEmployeeId()),
+							new Criteria().orOperator(fieldCriteria.toArray(new Criteria[0])));
+				}
 
 				Query query = new Query(criteria).with(pageable);
 				List<Lead> leads = mongoTemplate.find(query, Lead.class);
@@ -247,7 +298,13 @@ public class LeadController {
 	@GetMapping("/getAllColumns")
 	public ResponseEntity<?> getAllColumns() {
 		try {
-			return ResponseEntity.ok(leadColumnRepository.findByCompanyId(company.getCompanyId()));
+			String companyId;
+			if (user.getRole().equalsIgnoreCase("ROLE_COMPANY")) {
+				companyId=company.getCompanyId();
+			} else {
+				companyId=employee.getCompanyId();
+			}
+			return ResponseEntity.ok(leadColumnRepository.findByCompanyId(companyId));
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -356,8 +413,13 @@ public class LeadController {
 	public ResponseEntity<?> getLeadStatus() {
 
 		try {
-
-			List<LeadStatus> leadStatus = leadStatusRepository.findByCompanyId(company.getCompanyId());
+			String companyId;
+			if (user.getRole().equalsIgnoreCase("ROLE_COMPANY")) {
+				companyId=company.getCompanyId();
+			} else {
+				companyId=employee.getCompanyId();
+			}
+			List<LeadStatus> leadStatus = leadStatusRepository.findByCompanyId(companyId);
 
 			return ResponseEntity.ok(leadStatus);
 
