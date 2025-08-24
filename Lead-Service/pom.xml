@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.users</groupId>
-	<artifactId>User-Service</artifactId>
+	<artifactId>Lead-Service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>User-Service</name>
 	<description>Demo project for Spring Boot User Service</description>
